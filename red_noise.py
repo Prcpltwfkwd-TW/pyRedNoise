@@ -3,8 +3,6 @@ import numpy as np
 from numpy.fft import fft, fftfreq
 from scipy.linalg import logm, expm
 
-from chunk_power_spectrum import power_spectrum
-
 # lead-lag regression coefficient
 def calc_a(signal, lag = 1):
     """
