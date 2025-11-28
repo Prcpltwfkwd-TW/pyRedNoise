@@ -6,7 +6,7 @@ from scipy.linalg import logm, expm
 from chunk_power_spectrum import power_spectrum
 
 # lead-lag regression coefficient
-def _calc_a(signal, lag = 1):
+def calc_a(signal, lag = 1):
     """
     Calculating the lead-lag regression coefficient at specified lag.
     
@@ -104,7 +104,7 @@ def theoretical_red_noise_power_spectrum(signal, lag = 1, chunk_size = 1825):
     sp : ndarray
         Theoretical red noise power spectrum of the input signal.
     """
-    a    = _calc_a(signal, lag)
+    a    = calc_a(signal, lag)
     size = np.floor(chunk_size / 2).astype(int)
     freq = fftfreq(chunk_size)
     sp   = (1 - a**2) / (1 + a**2 - 2 * a * np.cos(2 * np.pi * freq))
