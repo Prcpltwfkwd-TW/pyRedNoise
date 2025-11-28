@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "pyRedNosie"
 version = "0.0.1"
 authors = [
-  { name="Brownian Motion", email="chunhaoc777@gmail.com" },
+  { name="brownian.motion.99", email="chunhaoc777@gmail.com" },
 ]
 description = "A package performing power spectrum analysis, and comparing the given signal with red noise"
 readme = "README.md"
