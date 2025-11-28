@@ -152,6 +152,30 @@ class RedNoiseAnalysis:
         
     red_noise_simulate_length : int, optional
         Length of the simulated red noise signal. Default is 365000, 1000 years for daily data.
+    
+    Public Attributes
+    -----------------
+    signal : array_like
+        Input signal (1D array).
+    
+    sp : ndarray
+        Power spectrum of the input signal.
+    
+    freq : ndarray
+        Frequencies corresponding to the power spectrum of the input signal.
+    
+    freq_theo : ndarray
+        Frequencies corresponding to the theoretical red noise power spectrum.
+    
+    sp_theo : ndarray
+        Theoretical red noise power spectrum calculated according to the input signal.
+        
+    sp_red : ndarray
+        Power spectrum of the simulated red noise.
+    
+    freq_red : ndarray
+        Frequencies corresponding to the power spectrum of the simulated red noise.
+    ----------
     """
     def __init__(self, signal, lag = 1, chunk_size = 1825, red_noise_simulate_length = 365000):
         self.signal           = signal
