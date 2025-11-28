@@ -134,55 +134,56 @@ def create_red_noise(a, simulate_length = 365000):
         red[i+1] = _time_integral(red[i], a, noise)
     return red
 
-def create_red_noise_chunk(red_noise, chunk_size = 1825, simulate_length = 365000):
+# Red noise analysis
+class RedNoiseAnalysis:
     """
-    Creating chunks of simulated red noise.
+    Performing red noise analysis on a given signal.
     
     Parameters
     ----------
-    red_noise : array_like
-        Simulated red noise signal (1D array).
+    signal : array_like
+        Input signal (1D array).
     
+    lag : int, optional
+        Lag at which to calculate the regression coefficient. Default is 1.
+        
     chunk_size : int, optional
         Chunk size. Default is 1825, 5 years for daily data.
-    
-    simulate_length : int, optional
+        
+    red_noise_simulate_length : int, optional
         Length of the simulated red noise signal. Default is 365000, 1000 years for daily data.
-    
-    Returns
-    -------
-    red : ndarray
-        Chunks of simulated red noise signal, each normalized to have standard deviation of 1.
     """
-    red       = np.zeros((chunk_num, chunk_size))
-    chunk_num = len(simulate_length) // chunk_size
-    for sample in range(chunk_num):
-        pos = random.choice(np.arange((simulate_length - chunk_size)))
-        red[sample]  = red_noise[pos:pos+chunk_size]
-        red[sample] /= red[sample].std()
-    return red
-
-# Red noise analysis
-class RedNoiseAnalysis:
-    
     def __init__(self, signal, lag = 1, chunk_size = 1825, red_noise_simulate_length = 365000):
-        self.signal          = signal
-        self.lag             = lag
-        self.chunk_size      = chunk_size
-        self.simulate_length = red_noise_simulate_length
+        self.signal           = signal
+        self._lag             = lag
+        self._chunk_size      = chunk_size
+        self._simulate_length = red_noise_simulate_length
         
         self.sp   = None
         self.freq = None
         
-        self.a          = None
+        self._a         = None
         self.freq_theo  = None
         self.sp_theo    = None
-        self.red_noise  = None
-        self.red_chunks = None
+        self._red_noise = None
+        self.sp_red     = None
+        self.freq_red   = None
         
     def get_power_spectrum(self):
-        self.freq, self.sp           = power_spectrum(self.signal, self.chunk_size)
-        self.a                       = _calc_a(self.signal, self.lag)
-        self.freq_theo, self.sp_theo = theoretical_red_noise_power_spectrum(self.signal, self.lag, self.chunk_size)
-        self.red_noise               = create_red_noise(self.a, self.simulate_length)
-        self.red_chunks              = create_red_noise_chunk(self.red_noise, self.chunk_size, self.simulate_length)
+        """
+        Calculating power spectrum of the input signal and corresponding red noise.
+        
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
+        self.freq, self.sp = power_spectrum(self.signal, self.chunk_size)
+        
+        self._a                      = _calc_a(self.signal, self._lag)
+        self.freq_theo, self.sp_theo = theoretical_red_noise_power_spectrum(self.signal, self._lag, self._chunk_size)
+        self._red_noise              = create_red_noise(self.a, self._simulate_length)
+        self.freq_red, self.sp_red   = power_spectrum(self._red_noise, self._chunk_size)
