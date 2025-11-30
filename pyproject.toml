@@ -2,6 +2,9 @@
 requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["pyRedNoise"]
+
 [project]
 name = "pyRedNosie"
 version = "0.0.1"
