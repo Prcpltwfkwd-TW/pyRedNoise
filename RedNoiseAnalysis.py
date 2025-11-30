@@ -148,3 +148,4 @@ class RedNoiseAnalysis:
         plt.yticks(fontsize = 14)
         plt.title("Power Spectrum of Signal and Corresponding Red Noise", fontsize = 16)
         plt.savefig(fig_name, dpi = 300)
+        plt.show()
