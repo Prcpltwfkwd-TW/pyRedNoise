@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 packages = ["pyRedNoise"]
 
 [project]
-name = "pyRedNosie"
+name = "pyRedNoise"
 version = "0.0.1"
 authors = [
   { name="brownian.motion.99", email="chunhaoc777@gmail.com" },
