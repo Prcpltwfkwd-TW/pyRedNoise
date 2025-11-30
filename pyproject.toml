@@ -7,7 +7,7 @@ packages = ["pyRedNoise"]
 
 [project]
 name = "pyRedNoise"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="brownian.motion.99", email="chunhaoc777@gmail.com" },
 ]
@@ -21,11 +21,10 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
-dependencies = [
-  "numpy",
-  "scipy",
-  "matplotlib",
-]
+[dependencies]
+  numpy = ">=2.3"
+  scipy = ">=1.16"
+  matplotlib = ">=3.10"
 
 [project.urls]
 Homepage = "https://github.com/Prcpltwfkwd-TW/pyRedNoise.git"
