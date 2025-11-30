@@ -19,7 +19,7 @@ def calc_a(signal, lag = 1):
         
     Returns
     -------
-    a : float
+    a : ndarray (1,)
         Lead-lag regression coefficient at the specified lag.
         If the given lag is greater than 1, the lag-th root of the regression coefficient matrix is returned.
     """
@@ -96,17 +96,17 @@ def theoretical_red_noise_power_spectrum(signal, lag = 1, chunk_size = 1825):
     
     Returns
     -------
-    freq : ndarray
+    freq : ndarray (size,)
         Frequencies corresponding to the power spectrum.
     
-    sp : ndarray
+    sp : ndarray (size,)
         Theoretical red noise power spectrum of the input signal.
     """
     a    = calc_a(signal, lag)
     size = np.floor(chunk_size / 2).astype(int)
     freq = fftfreq(chunk_size)
     sp   = (1 - a**2) / (1 + a**2 - 2 * a * np.cos(2 * np.pi * freq))
-    return freq[:size], sp.real[:size]
+    return freq[:size], sp.real[:size] / np.sum(sp.real[:size])  # Normalized power spectrum
 
 def create_red_noise(a, simulate_length = 365000):
     """
@@ -122,7 +122,7 @@ def create_red_noise(a, simulate_length = 365000):
         
     Returns
     -------
-    red : ndarray
+    red : ndarray (simulate_length,)
         Simulated red noise signal.
     """
     red    = np.zeros(simulate_length)
