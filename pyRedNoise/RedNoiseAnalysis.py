@@ -110,7 +110,7 @@ class RedNoiseAnalysis:
             red = self._create_red_noise_sample() # Bootstrapping
             self.freq_red, self.sp_red[_] = power_spectrum(red, self._chunk_size)
     
-    def plot_power_spectrum(self, fig_name = "red_noise_analysis.png"):
+    def plot_power_spectrum(self, title = "Power Spectrum of Signal and Corresponding Red Noise", fig_name = "red_noise_analysis.png"):
         """
         Plotting power spectrum of the input signal and corresponding red noise.
         
@@ -146,6 +146,6 @@ class RedNoiseAnalysis:
         plt.xticks(fontsize = 14)
         plt.ylabel("Explained Variance", fontsize = 14)
         plt.yticks(fontsize = 14)
-        plt.title("Power Spectrum of Signal and Corresponding Red Noise", fontsize = 16)
+        plt.title(title, fontsize = 16)
         plt.savefig(fig_name, dpi = 300)
         plt.show()
