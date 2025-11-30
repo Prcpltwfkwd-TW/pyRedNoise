@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 
-from red_noise import calc_a, _time_integral, _calc_noise, create_red_noise
+import pyRedNoise
+from pyRedNoise.red_noise import calc_a, _time_integral, _calc_noise, create_red_noise
 
 # Tests for calc_a function
 def test_calc_a_lag1_ar1_deterministic():

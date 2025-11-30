@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 
-from RedNoiseAnalysis import RedNoiseAnalysis
+import pyRedNoise
+from pyRedNoise.RedNoiseAnalysis import RedNoiseAnalysis
 
 
 def test_rednoiseanalysis_init_sets_attributes():

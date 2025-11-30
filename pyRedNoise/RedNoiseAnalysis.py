@@ -77,3 +77,6 @@ class RedNoiseAnalysis:
         self.freq_theo, self.sp_theo = theoretical_red_noise_power_spectrum(self.signal, self._lag, self._chunk_size)
         self._red_noise              = create_red_noise(self._a, self._simulate_length)
         self.freq_red, self.sp_red   = power_spectrum(self._red_noise, self._chunk_size)
+    
+    def plot_power_spectrum(self):
+        None

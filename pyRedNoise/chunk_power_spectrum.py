@@ -78,6 +78,7 @@ def power_spectrum(signal, chunk_size = 1825):
     
     for chunk in chunks:
         freq, sp = _calc_power_spectrum(chunk, chunk_size)
+        sp      /= np.sum(sp) # Normalizing
         all_sp.append(sp)
     
     return freq, all_sp

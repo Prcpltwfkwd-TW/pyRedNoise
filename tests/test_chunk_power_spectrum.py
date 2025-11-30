@@ -1,7 +1,9 @@
 import pytest
 import numpy as np
 from numpy.fft import fft, fftfreq
-from chunk_power_spectrum import _separate_chunks, _calc_power_spectrum, power_spectrum
+
+import pyRedNoise
+from pyRedNoise.chunk_power_spectrum import _separate_chunks, _calc_power_spectrum, power_spectrum
 
 # Tests for _separate_chunks function
 def test_separate_chunks_exact_division():
