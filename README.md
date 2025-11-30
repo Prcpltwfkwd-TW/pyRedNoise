@@ -40,7 +40,7 @@ rna.sp_red
 rna.freq_red
 ```
 
-Fast visualization
+Fast visualization. If you have specific plotting needs, calling this method is not suggested.
 ```
 rna.plot_power_spectrum() # show and save the plot at the same time
 ```
