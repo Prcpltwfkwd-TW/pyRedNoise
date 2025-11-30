@@ -1,3 +1,5 @@
 __pycache__/
 .pytest_cache
 tests/__pycache__
+dist/
+dist/pyrednosie-0.0.1.tar.gz
