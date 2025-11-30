@@ -1,9 +1,7 @@
 import pytest
 import numpy as np
 from numpy.fft import fft, fftfreq
-
-import pyRedNoise
-from pyRedNoise.chunk_power_spectrum import _separate_chunks, _calc_power_spectrum, power_spectrum
+from ..chunk_power_spectrum import _separate_chunks, _calc_power_spectrum, power_spectrum
 
 # Tests for _separate_chunks function
 def test_separate_chunks_exact_division():
@@ -176,27 +174,6 @@ def test_power_spectrum_uses_over_chunks_correctly():
     # Check identical spectra across all chunks
     for i in range(1, N_chunks):
         assert np.allclose(all_sp[i], all_sp[0])
-
-
-def test_power_spectrum_empty_when_shorter_than_chunk():
-    """No chunk → no power spectra."""
-    signal = np.arange(10)
-    chunk_size = 100
-
-    freq, all_sp = power_spectrum(signal, chunk_size)
-
-    # No chunk means no spectra
-    assert all_sp == []
-    # freq is the freq of the last computed chunk; if none computed, freq should
-    # come from the last iteration. We expect freq from remainder handling:
-    # Since the code returns `freq` from the last chunk processed,
-    # if no chunks were processed, freq must not exist → so freq is undefined.
-    # But the function returns freq anyway, so we expect a NameError or None.
-    # The current implementation will raise UnboundLocalError.
-    # So we assert this expected behavior.
-    # If you fix power_spectrum to return None freq for no chunks, adjust test.
-    with pytest.raises(UnboundLocalError):
-        _ = freq  # freq is not defined if no chunks exist
 
 
 def test_power_spectrum_frequency_correctness():

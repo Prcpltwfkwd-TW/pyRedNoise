@@ -73,6 +73,9 @@ def power_spectrum(signal, chunk_size = 1825):
     all_sp : ndarray
         All power spectrum for each chunk of the input signal.
     """
+    if len(signal) < chunk_size:
+        raise ValueError("Signal length must be at least as large as chunk_size.")
+    
     chunks = _separate_chunks(signal, chunk_size)
     all_sp = []
     
