@@ -15,9 +15,12 @@ def _separate_chunks(signal, chunk_size = 1825):
         
     Returns
     -------
-    chunks : list of ndarray
+    chunks : ndarray (n_chunks, chunk_size)
         List containing separated chunks of the input signal.
     """
+    if len(signal) < chunk_size:
+        raise ValueError("Signal length must be at least as large as chunk_size.")
+    
     chunk_length = chunk_size
     num_chunks   = len(signal) // chunk_length
     chunks = []
@@ -25,7 +28,7 @@ def _separate_chunks(signal, chunk_size = 1825):
         start = i * chunk_length
         end   = start + chunk_length
         chunks.append(signal[start:end])
-    return chunks
+    return np.array(chunks)
 
 def _calc_power_spectrum(signal, chunk_size = 1825):
     """
@@ -41,17 +44,17 @@ def _calc_power_spectrum(signal, chunk_size = 1825):
         
     Returns
     -------
-    freq : ndarray
+    freq : ndarray (size,)
         Frequencies corresponding to the power spectrum.
     
-    sp : ndarray
+    sp : ndarray (size,)
         Power spectrum of the input signal.
     """
     size = np.floor(chunk_size / 2).astype(int)
     ck   = fft(signal)
     freq = fftfreq(len(signal))
     sp   = 2 * ck * ck.conj() / len(signal)**2
-    return freq[:size], sp[:size]
+    return freq[:size], sp.real[:size] / np.sum(sp.real[:size]) # Normalized power spectrum
 
 def power_spectrum(signal, chunk_size = 1825):
     """
@@ -67,21 +70,17 @@ def power_spectrum(signal, chunk_size = 1825):
         
     Returns
     -------
-    freq : ndarray
+    freq : ndarray (size,)
         Frequencies corresponding to the power spectrum.
     
-    all_sp : ndarray
+    all_sp : ndarray (n_chunks, size)
         All power spectrum for each chunk of the input signal.
     """
-    if len(signal) < chunk_size:
-        raise ValueError("Signal length must be at least as large as chunk_size.")
-    
     chunks = _separate_chunks(signal, chunk_size)
     all_sp = []
     
     for chunk in chunks:
         freq, sp = _calc_power_spectrum(chunk, chunk_size)
-        sp      /= np.sum(sp) # Normalizing
         all_sp.append(sp)
     all_sp = np.array(all_sp)
     

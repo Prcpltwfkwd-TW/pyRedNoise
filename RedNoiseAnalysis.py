@@ -1,3 +1,4 @@
+import random
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
@@ -45,10 +46,11 @@ class RedNoiseAnalysis:
     freq_red : ndarray
         Frequencies corresponding to the power spectrum of the simulated red noise.
     """
-    def __init__(self, signal, lag = 1, chunk_size = 1825, red_noise_simulate_length = 365000):
+    def __init__(self, signal, lag = 1, chunk_size = 1825, n_red_noise_ens = 1000, red_noise_simulate_length = 365000):
         self.signal           = signal
         self._lag             = lag
         self._chunk_size      = chunk_size
+        self._n_ens           = n_red_noise_ens
         self._simulate_length = red_noise_simulate_length
         
         self.sp   = None
@@ -60,6 +62,24 @@ class RedNoiseAnalysis:
         self._red_noise = None
         self.sp_red     = None
         self.freq_red   = None
+    
+    def _create_red_noise_sample(self):
+        """
+        Bootstrapping chunks of red noise samples from the simulated red noise.
+        
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        red : ndarray (n_chunks, chunk_size)
+            Chunks of red noise samples.
+        """
+        pos  = random.choice(np.arange(self._simulate_length - len(self.signal)))
+        red  = self._red_noise[pos:pos+len(self.signal)]
+        red /= red.std()
+        return red
         
     def get_power_spectrum(self):
         """
@@ -73,12 +93,22 @@ class RedNoiseAnalysis:
         -------
         None
         """
+        # Signal power spectrum
+        print("Calculating power spectrum of the input signal...")
         self.freq, self.sp = power_spectrum(self.signal, self._chunk_size)
         
+        # Theoretical red noise power spectrum
+        print("Calculating theoretical red noise power spectrum...")
         self._a                      = calc_a(self.signal, self._lag)
         self.freq_theo, self.sp_theo = theoretical_red_noise_power_spectrum(self.signal, self._lag, self._chunk_size)
-        self._red_noise              = create_red_noise(self._a, self._simulate_length)
-        self.freq_red, self.sp_red   = power_spectrum(self._red_noise, self._chunk_size)
+        
+        # Simulated red noise power spectrum
+        print("Calculating simulated red noise power spectrum...")
+        self._red_noise = create_red_noise(self._a, self._simulate_length)
+        self.sp_red     = np.zeros((self._n_ens,) + self.sp.shape)
+        for _ in range(self._n_ens):
+            red = self._create_red_noise_sample() # Bootstrapping
+            self.freq_red, self.sp_red[_] = power_spectrum(red, self._chunk_size)
     
     def plot_power_spectrum(self, fig_name = "red_noise_analysis.png"):
         """
@@ -97,12 +127,15 @@ class RedNoiseAnalysis:
         The plot will be saved as a PNG file with the given name.
         This method is only for fast visualization. If you have specific plotting needs, calling this method is not suggested.
         """
+        print("Plotting power spectrum...")
+        print("The plot will be saved as a PNG file with the given name.")
+        print("This method is only for fast visualization. If you have specific plotting needs, calling this method is not suggested.")
         sp_red_ens_mean  = self.sp_red.mean(axis = 1).mean(axis = 0)
         sp_red_ens_std   = self.sp_red.mean(axis = 1).std(axis = 0)
         sp_conf_ens_high = stats.norm.interval(0.95, sp_red_ens_mean, sp_red_ens_std)[1]
         sp_conf_ens_low  = stats.norm.interval(0.95, sp_red_ens_mean, sp_red_ens_std)[0]
         
-        fig = plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(10, 5))
         plt.plot(self.freq, self.sp.mean(axis = 0), color = "k", linewidth = 1, label = "Signal")
         plt.plot(self.freq_red, sp_red_ens_mean, color = "dimgrey", linestyle = "--", label = "Simulated Red Noise")
         plt.fill_between(self.freq_red, sp_conf_ens_low, sp_conf_ens_high, color = "grey", alpha = 0.5)
