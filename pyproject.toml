@@ -1,5 +1,10 @@
 [build-system]
-requires = ["hatchling >= 1.26"]
+requires = [
+  "hatchling >= 1.26",
+  "numpy>=2.3",
+  "scipy>=1.16",
+  "matplotlib>=3.10",
+  ]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
@@ -21,10 +26,11 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
-[dependencies]
-  numpy = ">=2.3"
-  scipy = ">=1.16"
-  matplotlib = ">=3.10"
+dependencies = [
+  "numpy>=2.3",
+  "scipy>=1.16",
+  "matplotlib>=3.10",
+  ]
 
 [project.urls]
 Homepage = "https://github.com/Prcpltwfkwd-TW/pyRedNoise.git"
