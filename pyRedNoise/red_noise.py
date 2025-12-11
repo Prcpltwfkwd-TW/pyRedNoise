@@ -10,7 +10,7 @@ def calc_a(signal, lag = 1):
     
     Parameters
     ----------
-    signal : array_like
+    signal : array_like (time,)
         Input signal (1D array).
     
     lag : int, optional
