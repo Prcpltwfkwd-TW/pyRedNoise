@@ -11,7 +11,7 @@ class RedNoiseAnalysis:
     
     Parameters
     ----------
-    signal : array_like
+    signal : array_like (time,)
         Input signal (1D array).
     
     lag : int, optional
@@ -25,32 +25,32 @@ class RedNoiseAnalysis:
     
     Public Attributes
     -----------------
-    signal : array_like
+    signal : array_like (time,)
         Input signal (1D array).
     
-    sp : ndarray
+    sp : ndarray (n_chunks, size)
         Power spectrum of the input signal.
     
-    freq : ndarray
+    freq : ndarray (size,)
         Frequencies corresponding to the power spectrum of the input signal.
     
-    freq_theo : ndarray
+    freq_theo : ndarray (size,)
         Frequencies corresponding to the theoretical red noise power spectrum.
     
-    sp_theo : ndarray
+    sp_theo : ndarray (size,)
         Theoretical red noise power spectrum calculated according to the input signal.
         
-    sp_red : ndarray
+    sp_red : ndarray (n_red_noise_ens, n_chunks, size)
         Power spectrum of the simulated red noise.
     
-    freq_red : ndarray
+    freq_red : ndarray (size,)
         Frequencies corresponding to the power spectrum of the simulated red noise.
     """
     def __init__(self, signal, lag = 1, chunk_size = 1825, n_red_noise_ens = 1000, red_noise_simulate_length = 365000):
         self.signal           = signal
         self._lag             = lag
         self._chunk_size      = chunk_size
-        self._n_ens           = n_red_noise_ens
+        self._n_red_ens       = n_red_noise_ens
         self._simulate_length = red_noise_simulate_length
         
         self.sp   = None
@@ -73,7 +73,7 @@ class RedNoiseAnalysis:
         
         Returns
         -------
-        red : ndarray (n_chunks, chunk_size)
+        red : ndarray (chunk_size,)
             Chunks of red noise samples.
         """
         pos  = random.choice(np.arange(self._simulate_length - len(self.signal)))
@@ -105,8 +105,8 @@ class RedNoiseAnalysis:
         # Simulated red noise power spectrum
         print("Calculating simulated red noise power spectrum...")
         self._red_noise = create_red_noise(self._a, self._simulate_length)
-        self.sp_red     = np.zeros((self._n_ens,) + self.sp.shape)
-        for _ in range(self._n_ens):
+        self.sp_red     = np.zeros((self._n_red_ens,) + self.sp.shape)
+        for _ in range(self._n_red_ens):
             red = self._create_red_noise_sample() # Bootstrapping
             self.freq_red, self.sp_red[_] = power_spectrum(red, self._chunk_size)
     
