@@ -106,7 +106,7 @@ def theoretical_red_noise_power_spectrum(signal, lag = 1, chunk_size = 1825):
     size = np.floor(chunk_size / 2).astype(int)
     freq = fftfreq(chunk_size)
     sp   = (1 - a**2) / (1 + a**2 - 2 * a * np.cos(2 * np.pi * freq))
-    return freq[:size], sp.real[:size] / np.sum(sp.real[:size])  # Normalized power spectrum
+    return freq[:size], sp.real[:size]
 
 def create_red_noise(a, simulate_length = 365000):
     """
