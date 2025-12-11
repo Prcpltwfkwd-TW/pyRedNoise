@@ -7,7 +7,7 @@ def _separate_chunks(signal, chunk_size = 1825):
     
     Parameters
     ----------
-    signal : array_like
+    signal : array_like (time,)
         Input signal (1D array).
         
     chunk_size : int, optional
@@ -30,17 +30,14 @@ def _separate_chunks(signal, chunk_size = 1825):
         chunks.append(signal[start:end])
     return np.array(chunks)
 
-def _calc_power_spectrum(signal, chunk_size = 1825):
+def _calc_power_spectrum(signal):
     """
     Calculating power spectrum
     
     Parameters
     ----------
-    signal : array_like
+    signal : array_like (time,)
         Input signal (1D array).
-        
-    chunk_size : int, optional
-        Chunk size. Default is 1825, 5 years for daily data.
         
     Returns
     -------
@@ -50,11 +47,11 @@ def _calc_power_spectrum(signal, chunk_size = 1825):
     sp : ndarray (size,)
         Power spectrum of the input signal.
     """
-    size = np.floor(chunk_size / 2).astype(int)
+    size = np.floor(len(signal) / 2).astype(int)
     ck   = fft(signal)
     freq = fftfreq(len(signal))
     sp   = 2 * ck * ck.conj() / len(signal)**2
-    return freq[:size], sp.real[:size] / np.sum(sp.real[:size]) # Normalized power spectrum
+    return freq[:size], sp.real[:size]
 
 def power_spectrum(signal, chunk_size = 1825):
     """
@@ -62,7 +59,7 @@ def power_spectrum(signal, chunk_size = 1825):
     
     Parameters
     ----------
-    signal : array_like
+    signal : array_like (time,)
         Input signal (1D array).
         
     chunk_size : int, optional
@@ -80,7 +77,7 @@ def power_spectrum(signal, chunk_size = 1825):
     all_sp = []
     
     for chunk in chunks:
-        freq, sp = _calc_power_spectrum(chunk, chunk_size)
+        freq, sp = _calc_power_spectrum(chunk)
         all_sp.append(sp)
     all_sp = np.array(all_sp)
     

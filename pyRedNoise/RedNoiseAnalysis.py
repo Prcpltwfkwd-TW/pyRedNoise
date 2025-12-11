@@ -136,10 +136,10 @@ class RedNoiseAnalysis:
         sp_conf_ens_low  = stats.norm.interval(0.95, sp_red_ens_mean, sp_red_ens_std)[0]
         
         plt.figure(figsize=(10, 5))
-        plt.plot(self.freq, self.sp.mean(axis = 0), color = "k", linewidth = 1, label = "Signal")
-        plt.plot(self.freq_red, sp_red_ens_mean, color = "dimgrey", linestyle = "--", label = "Simulated Red Noise")
-        plt.fill_between(self.freq_red, sp_conf_ens_low, sp_conf_ens_high, color = "grey", alpha = 0.5)
-        plt.plot(self.freq_theo, self.sp_theo, color = "k", linestyle = ":", label = "Theoretical Red Noise")
+        plt.plot(self.freq, self.sp.mean(axis = 0) / np.sum(self.sp.mean(axis = 0)), color = "k", linewidth = 1, label = "Signal")
+        plt.plot(self.freq_red, sp_red_ens_mean / np.sum(sp_red_ens_mean), color = "dimgrey", linestyle = "--", label = "Simulated Red Noise")
+        plt.fill_between(self.freq_red, sp_conf_ens_low / np.sum(sp_red_ens_mean), sp_conf_ens_high / np.sum(sp_red_ens_mean), color = "grey", alpha = 0.5)
+        plt.plot(self.freq_theo, self.sp_theo / np.sum(self.sp_theo), color = "k", linestyle = ":", label = "Theoretical Red Noise")
         plt.legend(fontsize = 14)
         plt.xscale("log")
         plt.xlabel("frequency [timestep$^{-1}$]", fontsize = 14)
