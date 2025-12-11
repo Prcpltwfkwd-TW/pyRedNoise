@@ -54,7 +54,7 @@ def _calc_power_spectrum(signal, chunk_size = 1825):
     ck   = fft(signal)
     freq = fftfreq(len(signal))
     sp   = 2 * ck * ck.conj() / len(signal)**2
-    return freq[:size], sp.real[:size] / np.sum(sp.real[:size]) # Normalized power spectrum
+    return freq[:size], sp.real[:size]
 
 def power_spectrum(signal, chunk_size = 1825):
     """
