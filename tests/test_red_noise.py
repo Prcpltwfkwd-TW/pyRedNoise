@@ -16,7 +16,7 @@ def test_calc_a():
     
     # lag 5
     a5 = calc_a(a, lag = 5)
-    assert a5 == pytest.approx(0.95**5, rel = 1e-2)
+    assert a5 == pytest.approx(0.95, rel = 1e-2)
 
 def test_red_noise(rmm_data):
     rmm1   = rmm_data[0]

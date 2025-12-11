@@ -22,7 +22,7 @@ def test_calc_power_spectrum():
     y = 2 * np.sin(x) + 0.2 * np.random.rand(5000)
     
     # test the output size
-    freq, sp = _calc_power_spectrum(y, chunk_size = 5000)
+    freq, sp = _calc_power_spectrum(y)
     assert len(freq) == 2500
     assert len(sp)   == 2500
     
